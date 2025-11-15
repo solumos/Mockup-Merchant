@@ -2,10 +2,12 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useCart } from '../context/CartContext'
 import './Checkout.css'
 
 export default function Checkout() {
   const router = useRouter()
+  const { cart, cartTotal, clearCart } = useCart()
   const [orderPlaced, setOrderPlaced] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
@@ -19,11 +21,6 @@ export default function Checkout() {
     expiryDate: '',
     cvv: '',
   })
-
-  // Get cart from localStorage
-  const cart = typeof window !== 'undefined' ? 
-    JSON.parse(localStorage.getItem('cart') || '[]') : []
-  const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0)
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -42,9 +39,7 @@ export default function Checkout() {
     }
 
     setOrderPlaced(true)
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('cart', '[]')
-    }
+    clearCart()
     
     setTimeout(() => {
       router.push('/')

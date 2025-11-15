@@ -2,9 +2,11 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useCart } from '../../context/CartContext'
 
 export default function ProductDetailClient({ product }) {
   const router = useRouter()
+  const { addToCart } = useCart()
   const [selectedSize, setSelectedSize] = useState('')
   const [selectedColor, setSelectedColor] = useState('')
   const [quantity, setQuantity] = useState(1)
@@ -24,6 +26,9 @@ export default function ProductDetailClient({ product }) {
       return
     }
 
+    console.log('Adding to cart:', { product, selectedSize, selectedColor, quantity })
+    addToCart(product, selectedSize, selectedColor, quantity)
+    console.log('Added to cart successfully')
     setShowSuccess(true)
     setTimeout(() => setShowSuccess(false), 3000)
   }
